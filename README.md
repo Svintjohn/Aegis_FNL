@@ -1,4 +1,4 @@
-# aegis_fnl
+# AEGIS
 
 A new Flutter project.
 

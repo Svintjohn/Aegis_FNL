@@ -8,7 +8,7 @@ import '../widgets/common.dart';
 import 'project_card.dart';
 
 class BrowseScreen extends ConsumerStatefulWidget {
-  /// Opens straight to one tab when pushed from a "see all" link.
+  /// Opens straight to one tab when pushed from a se all link.
   final int initialTab;
   final bool standalone;
 

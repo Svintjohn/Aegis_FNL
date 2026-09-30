@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'models.dart';
+import 'api_client.dart';
 
 // The current role of the user. 
 final roleProvider = StateProvider<Role>((ref) => Role.client);

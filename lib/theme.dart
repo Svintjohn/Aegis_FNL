@@ -31,26 +31,31 @@ class Gap {
 
 class AppText {
   static TextStyle get display => GoogleFonts.manrope(
-        fontSize: 28, fontWeight: FontWeight.w800, height: 1.15,
-        letterSpacing: -0.5, color: AppColors.ink,
-      );
+    fontSize: 28,
+    fontWeight: FontWeight.w800,
+    height: 1.15,
+    letterSpacing: -0.5,
+    color: AppColors.ink,
+  );
 
   static TextStyle get heading => GoogleFonts.manrope(
-        fontSize: 20, fontWeight: FontWeight.w700,
-        letterSpacing: -0.2, color: AppColors.ink,
-      );
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.2,
+    color: AppColors.ink,
+  );
 
   static TextStyle get title => GoogleFonts.manrope(
-        fontSize: 15.5, fontWeight: FontWeight.w700, color: AppColors.ink,
-      );
+    fontSize: 15.5,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+  );
 
-  static TextStyle get body => GoogleFonts.inter(
-        fontSize: 14.5, height: 1.45, color: AppColors.ink,
-      );
+  static TextStyle get body =>
+      GoogleFonts.inter(fontSize: 14.5, height: 1.45, color: AppColors.ink);
 
-  static TextStyle get caption => GoogleFonts.inter(
-        fontSize: 12, height: 1.35, color: AppColors.muted,
-      );
+  static TextStyle get caption =>
+      GoogleFonts.inter(fontSize: 12, height: 1.35, color: AppColors.muted);
 }
 
 ThemeData buildTheme() {
@@ -63,7 +68,7 @@ ThemeData buildTheme() {
     onSurface: AppColors.ink,
     error: AppColors.red,
   );
-
+  //
   return ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
@@ -84,7 +89,11 @@ ThemeData buildTheme() {
       bodyMedium: AppText.body,
       labelSmall: AppText.caption,
     ),
-    dividerTheme: const DividerThemeData(color: AppColors.line, thickness: 1, space: 1),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.line,
+      thickness: 1,
+      space: 1,
+    ),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
       backgroundColor: AppColors.ink,

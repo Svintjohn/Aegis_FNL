@@ -5,9 +5,7 @@ import '../data/store.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 
-/// Three steps: what the job is, how it's broken up, then confirm.
-/// Split this way because the milestone step is where clients actually
-/// think, and burying it under a long single form gets it skipped.
+
 class CreateProjectScreen extends ConsumerStatefulWidget {
   const CreateProjectScreen({super.key});
 
@@ -40,7 +38,7 @@ class _CreateProjectScreenState extends ConsumerState<CreateProjectScreen> {
 
   static const _skillOptions = [
     'UI/UX Design', 'Figma', 'Flutter', 'React', 'Node.js',
-    'Python', 'Illustration', 'Copywriting',
+    'Python', 'Illustration', 'Copywriting', 'Cybersecurity',
   ];
 
   double get _total => _milestones.fold(0.0, (sum, m) => sum + m.value);
@@ -74,6 +72,37 @@ class _CreateProjectScreenState extends ConsumerState<CreateProjectScreen> {
     } else {
       _publish();
     }
+  }
+
+  Future<void> _addCustomSkill() async {
+    final controller = TextEditingController();
+    final result = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Add a skill'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: 'e.g. Cybersecurity'),
+          onSubmitted: (v) => Navigator.pop(dialogContext, v),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, controller.text),
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+
+    final skill = result?.trim() ?? '';
+    if (skill.isEmpty) return;
+    setState(() => _skills.add(skill));
   }
 
   void _publish() {
@@ -200,6 +229,60 @@ class _CreateProjectScreenState extends ConsumerState<CreateProjectScreen> {
                       ),
                     ),
                   ),
+                // Custom skills the user typed in themselves — rendered as
+                // removable chips since they're not part of _skillOptions.
+                for (final skill in _skills.where((s) => !_skillOptions.contains(s)))
+                  Pressable(
+                    scale: 0.94,
+                    onTap: () => setState(() => _skills.remove(skill)),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.navy,
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            skill,
+                            style: AppText.caption.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.close_rounded, size: 13, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
+                // Tap to type in a skill that isn't in the list above.
+                Pressable(
+                  scale: 0.94,
+                  onTap: _addCustomSkill,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.muted.withValues(alpha: 0.5)),
+                      borderRadius: BorderRadius.circular(9),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add_rounded, size: 14, color: AppColors.muted),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Others',
+                          style: AppText.caption.copyWith(
+                            color: AppColors.muted,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ],

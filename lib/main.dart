@@ -33,6 +33,7 @@ final _router = GoRouter(
     GoRoute(path: '/forgot', builder: (_, __) => const ForgotPasswordScreen()),
     GoRoute(path: '/role', builder: (_, __) => const RoleScreen()),
     GoRoute(path: '/home', builder: (_, __) => const Shell()),
+
     GoRoute(
       path: '/project/:id',
       builder: (_, state) => ProjectScreen(projectId: state.pathParameters['id']!),
@@ -46,6 +47,7 @@ final _router = GoRouter(
       path: '/chat/:id',
       builder: (_, state) => ChatScreen(projectId: state.pathParameters['id']!),
     ),
+
     GoRoute(
       path: '/browse-jobs',
       builder: (_, __) => const BrowseScreen(initialTab: 0, standalone: true),
@@ -54,6 +56,7 @@ final _router = GoRouter(
       path: '/browse-people',
       builder: (_, __) => const BrowseScreen(initialTab: 1, standalone: true),
     ),
+
     GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
     GoRoute(path: '/wallet', builder: (_, __) => const WalletScreen()),
     GoRoute(path: '/verification', builder: (_, __) => const VerificationScreen()),
@@ -72,6 +75,7 @@ class AegisApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: buildTheme(),
       routerConfig: _router,
+      useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
     );

@@ -26,6 +26,7 @@ dependencies:
   go_router: ^14.2.0
   google_fonts: ^6.2.1
   device_preview: ^1.2.0
+  supabase_flutter: ^2.18.0
 
 dev_dependencies:
   flutter_test:

@@ -1,15 +1,14 @@
 enum Role { client, freelancer }
 
-// The status of a milestone in the project workflow. The order is important, as it
 enum MilestoneStatus {
-  locked,      
-  submitted,   
-  revision,  
-  released,    
+  locked,      // funded, freelancer hasn't submitted
+  submitted,   // waiting on the client
+  revision,    // client sent it back
+  released,    // paid out
 }
 
-// The status of a project in the workflow. The order is important, as it
 enum ProjectStatus { awaitingFunds, active, completed, disputed }
+
 class AppUser {
   final String id;
   final String name;
@@ -56,7 +55,7 @@ class Milestone {
   });
 
   /// The client gets 14 days to respond once work is submitted, then the
-  /// funds release on their own. 
+  /// funds release on their own. Null unless we're actually waiting on them.
   int? get daysLeftToReview {
     if (status != MilestoneStatus.submitted || submittedAt == null) return null;
     final elapsed = DateTime.now().difference(submittedAt!).inDays;
@@ -125,7 +124,7 @@ class Project {
     return done / milestones.length;
   }
 
-// The first milestone that is not yet released. This is the one that the freelancer is currently working on, or the next one to be worked on.
+  /// The one the user can actually act on right now.
   Milestone? get currentMilestone {
     for (final m in milestones) {
       if (m.status != MilestoneStatus.released) return m;

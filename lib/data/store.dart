@@ -1,13 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'models.dart';
-import 'api_client.dart';
 
-// The current role of the user. 
+/// Which hat the user is wearing. Switching it changes the home feed,
+/// the actions on a project, and what the wallet shows.
 final roleProvider = StateProvider<Role>((ref) => Role.client);
 
 final storeProvider = NotifierProvider<Store, AppData>(Store.new);
 
-// Currently no database but I will input or use a SUPABASE database to store the data and retrieve it. For now, I will use a local store to simulate the data.
 class AppData {
   final List<Project> projects;
   final List<Message> messages;
@@ -56,9 +55,9 @@ class Store extends Notifier<AppData> {
   @override
   AppData build() => _seed();
 
-// --- user actions ---
-
-// The client funds the project, which moves it to the active state and allows the freelancer to submit work. The money is held in escrow until released.
+  // --- money ----
+  /// Client funds the escrow. Until this happens the freelancer sees
+  /// "awaiting funds" and can't start.
   void fundProject(String projectId) {
     _updateProject(projectId, (p) => p.copyWith(status: ProjectStatus.active));
     _notify(
@@ -83,7 +82,7 @@ class Store extends Notifier<AppData> {
     );
   }
 
-// Client release or approved the project and releaase the money to the freelancer. Once all milestone are released, the project is marked as completed and the funds are added to the client's wallet balance.
+  /// Client approves — this is the moment money actually moves.
   void releaseMilestone(String projectId, String milestoneId) {
     final project = _project(projectId);
     final milestone = project?.milestones.where((m) => m.id == milestoneId).firstOrNull;
@@ -128,7 +127,6 @@ class Store extends Notifier<AppData> {
 
   // --- projects ---
 
-// This is called when the client creates a new project. It builds the milestones and adds the project to the store.
   String createProject({
     required String title,
     required String description,
@@ -176,9 +174,7 @@ class Store extends Notifier<AppData> {
         'The client has been notified of your proposal.', projectId: projectId);
   }
 
-  // --- chat & notices ---
-
-  // Send a message in the project chat. This is called by the freelancer or client.
+  // --- chat & notices ----
 
   void sendMessage(String projectId, String text) {
     final msg = Message(
@@ -198,8 +194,6 @@ class Store extends Notifier<AppData> {
   }
 
   // --- disputes ---
-
-  // The client or freelancer can open a dispute case. This freezes the project and requires admin intervention to resolve.
 
   void openCase(String projectId, String reason) {
     final project = _project(projectId);
@@ -229,9 +223,7 @@ class Store extends Notifier<AppData> {
     _updateProject(resolved.projectId, (p) => p.copyWith(status: ProjectStatus.active));
   }
 
-  // --- internals --- 
-
-  // Helper to find a project by ID. Returns null if not found.
+  // --- internals ---
 
   Project? _project(String id) => state.project(id);
 
@@ -279,12 +271,12 @@ const demoFreelancers = [
     skills: ['React', 'Node.js', 'Firebase'], rate: '₱500–800/hr',
   ),
   AppUser(
-    id: 'f3', name: 'Bleu Sunshine', headline: 'Mobile Developer',
+    id: 'f3', name: 'Chican Reyes', headline: 'Mobile Developer',
     rating: 4.7, completedProjects: 9, verified: false,
     skills: ['Flutter', 'Dart', 'Supabase'], rate: '₱600–900/hr',
   ),
   AppUser(
-    id: 'f4', name: 'Xavier San Mateo', headline: 'Backend Engineer',
+    id: 'f4', name: 'Saint Leclerc', headline: 'Backend Engineer',
     rating: 4.6, completedProjects: 7, verified: true,
     skills: ['Python', 'FastAPI', 'PostgreSQL'], rate: '₱550–850/hr',
   ),
@@ -300,7 +292,7 @@ AppData _seed() {
         'A simple point-of-sale for a two-branch coffee shop. Needs an order '
         'screen, daily sales summary, and printable receipts.',
     clientName: 'Cebu Retail Co.',
-    freelancerName: 'Paulina Manalo',
+    freelancerName: 'Mika Santos',
     budget: 5000,
     skills: ['Flutter', 'PostgreSQL'],
     postedAt: now.subtract(const Duration(days: 12)),
@@ -323,7 +315,7 @@ AppData _seed() {
         'Refresh an existing marketing page. Same copy, new layout, must load '
         'fast on mobile data.',
     clientName: 'Studio Marikina',
-    freelancerName: 'Amadeo Mercado',
+    freelancerName: 'Josh Cruz',
     budget: 3750,
     skills: ['Figma', 'React'],
     postedAt: now.subtract(const Duration(days: 5)),
@@ -344,7 +336,7 @@ AppData _seed() {
       description:
           'Design a dashboard for tracking stock across three warehouses. '
           'Charts, low-stock alerts, and a weekly export.',
-      clientName: 'Berceles IT Solutions',
+      clientName: 'Nueva Supply',
       budget: 4500,
       status: ProjectStatus.awaitingFunds,
       skills: ['UI Design', 'Figma'],
@@ -359,7 +351,7 @@ AppData _seed() {
       id: '4',
       title: 'Mobile App Icon Set',
       description: '24 icons in two weights, delivered as SVG and a Figma library.',
-      clientName: 'Google Developer Group on Campus - HAU',
+      clientName: 'Studio Marikina',
       budget: 1200,
       status: ProjectStatus.awaitingFunds,
       skills: ['Illustration', 'Figma'],

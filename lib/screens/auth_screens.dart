@@ -35,6 +35,7 @@ class _Brand extends StatelessWidget {
   }
 }
 
+/// Fades and lifts its children in one after another on first build.
 class _Entrance extends StatelessWidget {
   final List<Widget> children;
   const _Entrance({required this.children});

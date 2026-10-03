@@ -16,7 +16,7 @@ class HomeScreen extends ConsumerWidget {
     final data = ref.watch(storeProvider);
     final isClient = role == Role.client;
 
-// Client will see what projects they have posted, and freelancers will see what projects they are working on.
+    // Client sees what they commissioned; freelancer sees what they're working on.
     final mine = data.projects.where((p) {
       if (isClient) return p.clientName == 'You' || p.freelancerName != null;
       return p.freelancerName != null;
@@ -211,7 +211,6 @@ class _MiniStat extends StatelessWidget {
   }
 }
 
-// A small card representing a freelancer in the horizontal list on the home screen.
 class _FreelancerTile extends StatelessWidget {
   final AppUser user;
   const _FreelancerTile(this.user);

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 
-/// Buttons and cards shrink slightly while held. 
+/// Buttons and cards shrink slightly while held. Cheap, but it's most of
+/// what makes the app feel responsive rather than flat.
 class Pressable extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -53,8 +54,6 @@ class AppButton extends StatelessWidget {
     this.busy = false,
     this.fullWidth = true,
   });
-
-  // The button is disabled if onPressed is null or busy is true.
 
   @override
   Widget build(BuildContext context) {

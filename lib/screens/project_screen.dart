@@ -539,8 +539,6 @@ class _Note extends StatelessWidget {
   }
 }
 
-/// Shared bottom sheet for "type a note, then confirm" — submitting work,
-/// requesting a revision, and opening a case all use the same shape.
 Future<String?> _promptForText(
   BuildContext context, {
   required String title,

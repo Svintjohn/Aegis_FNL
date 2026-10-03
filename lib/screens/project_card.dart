@@ -3,7 +3,8 @@ import '../data/models.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 
-// This represent project for the home screen, browse screen, and search results. It is not used for the project details screen.
+/// One project in a list. Shows the job-post shape (budget range, proposal
+/// count) or the contract shape (milestone progress), depending on context.
 class ProjectCard extends StatelessWidget {
   final Project project;
   final VoidCallback? onTap;

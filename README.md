@@ -1,96 +1,125 @@
-# AEGIS
+<!--
+  This is your project's front page. Replace every placeholder below.
+  It is the first thing your instructor and any future employer will read, and
+  the live link in it is how your project gets opened for grading.
 
-Milestone escrow for student freelancers. A client locks the budget up front, the freelancer works against milestones, and money only moves when the client approves — or automatically, if they go quiet for 14 days.
+  New here? Read START-HERE.md first. Delete this comment when you are done.
+-->
 
-## The problem
+# Aegis
 
-Student freelancers taking small gigs (design work, tutoring, code, etc.) often deal with clients who ghost after the work is delivered — no approval, no payment, no response. Aegis solves this two ways:
+> A milestone-based escrow app that protects student and junior freelancers from client ghosting and non-payment by locking project funds until work is approved.
 
-Money is locked before work starts. The client funds the full project budget into escrow when the project begins, not after.
-Silence isn't free for the client. If a client doesn't approve or dispute a submitted milestone within 14 days, it releases automatically.
+**Live demo:** https://YOURUSERNAME.github.io/YOUR-REPO/ <!-- GitHub Pages is set up already; replace if you host elsewhere -->
+**Demo video:** `docs/demo.mp4` (link it here once it exists)
+**Course:** Applications Development and Emerging Technologies (6ADET), Holy Angel University
+**Author:** Your Name
 
-## Features
+This repository lives in the author's own GitHub account and is public on
+purpose. There is no `student.json` here and there should not be one: see
+`docs/06-security-and-privacy.md` for what a public repo means for secrets and
+personal data.
 
-- Auth
+---
 
-Login / signup / forgot password with inline validation
-Role selection (Client or Freelancer), switchable anytime from the app bar
+## Screenshots
 
-- Client
+Put two or three real screenshots at phone size in `docs/assets/`, then replace
+this paragraph with them:
 
-Post a project with a 3-step wizard (details → skills → milestones)
-Lock the full budget via GCashor Maya
-Approve a milestone (releases funds) or request a revision with notes
-Open a dispute case if something's wrong
+```markdown
+| Log In | Post a project | Milestone Tracker |
+| <img width="468" height="956" alt="image" src="https://github.com/user-attachments/assets/9634f184-49d5-478b-b695-67f842a70e32" />
+ | <img width="479" height="953" alt="image" src="https://github.com/user-attachments/assets/d2ac1973-1823-4d83-a834-bc32b1b6859d" />
+ | <img width="512" height="959" alt="image" src="https://github.com/user-attachments/assets/2fccf7c4-01e2-4f5d-ae4a-38b63daf9f9a" />
+ |
+```
 
-- Freelancer
+A repo without screenshots reads as abandoned, whatever the code says.
 
-Browse and apply to open jobs
-Submit work per milestone, resubmit after a revision request
-Wallet balance with withdraw to GCash or Maya
+## What it does
 
-- Shared
+Three to five bullets. What can a user actually do?
 
-Per-project chat
-Notifications with unread badge (payments, submissions, disputes)
-14-day "days left to review" countdown shown on every active milestone
-Admin view for resolving open dispute cases
+- Lets a client post a project with milestones and fund it upfront, so the freelancer knows the money is real before starting work
+- Holds each milestone's payment in escrow until the client approves the submitted work, or releases automatically if the client goes silent past the review window
+- Lets a freelancer submit work per milestone and request a revision cycle if the client isn't satisfied
+- Flags a project for admin/human review when a dispute can't be resolved by the app's own rules
+- Verifies student freelancers, and shows ratings/reviews from past projects
+- Sends in-app notifications for funding, submissions, approvals, and disputes
 
-## Running it
+## Built with
+
+| | |
+| --- | --- |
+| Framework | Flutter (Dart) |
+| State | Riverpod (flutter_riverpod) — a single Store extends Notifier<AppData> holding all app state |
+| Router | go_router |
+| Storage | Static no SUPABASE yet. |
+| Other packages | google_fonts (Manrope/Inter type system), device_preview (phone-frame preview when testing on web) |
+
+## Running it yourself
 
 ```bash
 flutter pub get
-flutter run -d chrome      
+flutter run -d chrome
 ```
 
-## Where things are 
+Then open http://localhost:8080. Requires Flutter (run `flutter --version` and
+put yours here).
 
-```bash
-lib/
-  main.dart                       app entry point — sets up ProviderScope, DevicePreview,
-                                   and every go_router route
+### Environment variables
 
-  theme.dart                      AppColors, AppText, Gap spacing scale, buildTheme(),
-                                   and the peso()/timeAgo() formatters used everywhere
+This project does not use a .env file. Flutter/Dart has no built-in .env reader, so configuration instead lives in a gitignored Dart file: copy lib/data/supabase_config.dart.example to lib/data/supabase_config.dart and fill in your own values. Never commit the real file.
 
-  data/
-    models.dart                   the shapes: AppUser, Milestone, Project, Message,
-                                   Notice, DisputeCase, and the Role/MilestoneStatus/
-                                   ProjectStatus/NoticeKind enums — all immutable with
-                                   copyWith()
-    store.dart                    the app's brain — a Riverpod Notifier<AppData> called
-                                   Store. Every mutation is a method here: fundProject,
-                                   submitWork, releaseMilestone, requestRevision,
-                                   withdraw, createProject, applyToProject, sendMessage,
-                                   markAllNoticesRead, openCase, resolveCase.
-                                   _seed() at the bottom is the fake starting data.
 
-  widgets/
-    common.dart                   shared pieces every screen imports: Pressable,
-                                   AppButton, AppField, AppCard, StatusPill, Avatar,
-                                   and the toast() snackbar helper
+## Privacy and secrets
 
-  screens/
-    auth_screens.dart             LoginScreen, SignupScreen, ForgotPasswordScreen,
-                                   RoleScreen (picks Client/Freelancer, sets roleProvider)
-    shell.dart                    Shell — the bottom-nav scaffold wrapping Home/Browse/
-                                   Chats/Profile, role toggle, notice badge, end drawer
-    home_screen.dart              role-aware dashboard (client's posted projects vs.
-                                   freelancer's active gigs + wallet snapshot)
-    browse_screen.dart            two tabs: open jobs to apply to, freelancers to browse
-    project_card.dart             the reusable project/job card used in Home and Browse
-    project_screen.dart           project detail — milestone timeline, submit-work
-                                   dialog, release/revision actions, open-a-case flow
-    create_project_screen.dart    3-step "post a project" wizard (details → skills →
-                                   milestones), calls Store.createProject
-    chat_screens.dart             ChatListScreen (tab inside Shell) + ChatScreen
-                                   (per-project thread), calls Store.sendMessage
-    money_screens.dart            DepositScreen (locks the budget, calls
-                                   Store.fundProject) + WalletScreen (balance,
-                                   calls Store.withdraw)
-    notifications_screen.dart     reads storeProvider.notices, groups by NoticeKind,
-                                   calls markAllNoticesRead
-    profile_screen.dart           also defines VerificationScreen and SettingsScreen
-    admin_screen.dart             lists open DisputeCases, resolves them via
-                                   Store.resolveCase, unfreezing the project    
-```
+Required section. Two or three honest sentences:
+
+- The app stores account info (email, full name, role, verification status) and project/escrow data (milestones, amounts, messages) in Supabase Postgres tables.
+- Row Level Security (RLS) policies on the profiles table restrict reads/writes to the authenticated owner.
+- All sample data, screenshots, and the demo are all an example, no real personal information.
+
+## Project documentation
+
+| Document | |
+| --- | --- |
+| https://github.com/HAU-6ADET/student-6ADET-2125-Jberceles/blob/main/project/PROPOSAL.md | the problem, the users, the scope |
+| https://github.com/HAU-6ADET/student-6ADET-2125-Jberceles/blob/main/project/Wireframe-ADET-PRELIMS.pdf | what it looks like, and the screen flow |
+| [Design system](docs/03-design-system.md) | colors, type, spacing, components |
+| [Weekly reports](docs/04-weekly-reports.md) | what happened each week |
+| https://drive.google.com/file/d/1zDjKjeppALMwZGIxpDLFpaN8oQErFzMz/view?usp=sharing | the recording and what it shows |
+| https://github.com/Svintjohn/final-project-template/edit/main/README.md | the checklist, filled in |
+
+## Status and what is next
+
+Core flows work: signup/login via Supabase Auth, posting a project with milestones, funding, submitting work, approving/releasing a milestone, and requesting revisions. Admin escalation and chat exist in the UI. Known gaps: payment is simulated rather than wired to a real payment gateway, and the 14-day anti-ghosting auto-release timer is not yet backed by a scheduled server job. Next: wire real payments, move the auto-release timer server-side, and add push notifications. Also the final Integration of a DATABASE 
+
+## Credits
+
+- Packages: see pubspec.yaml
+- Assets, icons, 3D models, sounds: name the author and the licence for each
+- People who helped, and how
+
+## AI use
+
+If you used AI while building this, say so here. Honest disclosure is the
+standard in this course and increasingly outside it, and reporting heavy use
+accurately costs you nothing.
+
+This section is the last 10 points of the finals badge, and it wants three
+things:
+
+![Built with AI assistance](https://img.shields.io/badge/built%20with-AI%20assistance-0b5fff)
+
+- the badge above, or one you like better
+- a line naming which assistant you used and how much of the work it touched
+- a link to https://github.com/Svintjohn/final-project-template/blob/main/AI-USAGE.md, where the full account lives
+
+Keep the detail in `AI-USAGE.md` rather than here. This section is the summary a
+visitor reads; that file is the record the badge is graded from.
+
+## Licence
+
+MIT, see [LICENSE](LICENSE). Change it if you want different terms.

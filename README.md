@@ -11,7 +11,7 @@
 > A milestone-based escrow app that protects student and junior freelancers from client ghosting and non-payment by locking project funds until work is approved.
 
 **Live demo:** https://YOURUSERNAME.github.io/YOUR-REPO/ <!-- GitHub Pages is set up already; replace if you host elsewhere -->
-**Demo video:** `https://drive.google.com/drive/quota`)
+**Demo video:** `https://drive.google.com/drive/folders/1MjzGeNnar5GfCoyp0Vz2N6_mQaaXa8lJ?usp=sharing`)
 **Course:** Applications Development and Emerging Technologies (6ADET), Holy Angel University
 **Author:** Berceles, John Benedcit B.
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../data/models.dart';
 import '../data/store.dart';
+import '../data/supabase_client.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 import 'home_screen.dart';
@@ -308,7 +309,10 @@ class _Menu extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.logout_rounded, color: AppColors.red, size: 21),
               title: Text('Log out', style: AppText.body.copyWith(color: AppColors.red)),
-              onTap: () => context.go('/login'),
+              onTap: () async {
+                await supabase.auth.signOut();
+                if (context.mounted) context.go('/login');
+              },
             ),
             const SizedBox(height: Gap.sm),
           ],

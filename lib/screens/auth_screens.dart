@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/models.dart';
 import '../data/store.dart';
+import '../data/supabase_client.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 
@@ -90,10 +92,22 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_emailError != null || _passwordError != null) return;
 
     setState(() => _busy = true);
-    await Future.delayed(const Duration(milliseconds: 700));
-    if (!mounted) return;
-    setState(() => _busy = false);
-    context.go('/role');
+    try {
+      await supabase.auth.signInWithPassword(
+        email: _email.text.trim(),
+        password: _password.text,
+      );
+      if (!mounted) return;
+      context.go('/role');
+    } on AuthException catch (e) {
+      if (!mounted) return;
+      toast(context, e.message);
+    } catch (e) {
+      if (!mounted) return;
+      toast(context, 'Could not log in: $e');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   @override
@@ -202,10 +216,28 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_errors.values.any((e) => e != null)) return;
 
     setState(() => _busy = true);
-    await Future.delayed(const Duration(milliseconds: 700));
-    if (!mounted) return;
-    setState(() => _busy = false);
-    context.go('/role');
+    try {
+      // full_name is passed as user metadata; a database trigger
+      // (handle_new_user in supabase_schema.sql) reads it and creates the
+      // matching row in profiles automatically. We don't insert into
+      // profiles directly here, since RLS would reject it before email
+      // confirmation finishes.
+      await supabase.auth.signUp(
+        email: _email.text.trim(),
+        password: _password.text,
+        data: {'full_name': _name.text.trim()},
+      );
+      if (!mounted) return;
+      context.go('/role');
+    } on AuthException catch (e) {
+      if (!mounted) return;
+      toast(context, e.message);
+    } catch (e) {
+      if (!mounted) return;
+      toast(context, 'Could not sign up: $e');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   @override

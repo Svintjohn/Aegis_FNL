@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../data/models.dart';
 import '../data/store.dart';
+import '../data/supabase_client.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 
@@ -74,7 +75,10 @@ class ProfileScreen extends ConsumerWidget {
           'Log out',
           tone: ButtonTone.outline,
           icon: Icons.logout_rounded,
-          onPressed: () => context.go('/login'),
+          onPressed: () async {
+            await supabase.auth.signOut();
+            if (context.mounted) context.go('/login');
+          },
         ),
       ],
     );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'data/supabase_client.dart';
 import 'screens/admin_screen.dart';
 import 'screens/auth_screens.dart';
 import 'screens/browse_screen.dart';
@@ -16,7 +17,10 @@ import 'screens/project_screen.dart';
 import 'screens/shell.dart';
 import 'theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initSupabase();
+
   runApp(
     DevicePreview(
       enabled: !kReleaseMode,
